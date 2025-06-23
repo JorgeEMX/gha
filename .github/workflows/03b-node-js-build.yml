@@ -1,0 +1,38 @@
+name: 03b-build-node-application
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  setup-node:
+    # This workflow contains a single job called "setup-node"
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      # This action sets up a Node.js environment for use in actions by adding the
+      # Node.js binary to the PATH and caching dependencies.
+      uses: actions/setup-node@v4
+      with:
+          # Version Spec of the version to use in SemVer notation.
+          # It also admits such aliases as lts/*, latest, nightly and canary builds
+          # Examples: 12.x, 10.15.1, >=10.15.0, lts/Hydrogen, 16-nightly, latest, node
+          node-version: '20.x'
+
+    - name: npm ci
+      # This step runs the npm ci command to install dependencies from package-lock.json
+      run: npm ci
+
+    - name: npm test
+      # This step runs the npm test command to execute tests defined in package.json
+      run: npm test
